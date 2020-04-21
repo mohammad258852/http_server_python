@@ -3,7 +3,7 @@ import os
 import datetime
 import threading
 import time
-import httpParsersecond
+import httpParser
 
 
 def makeHeader(code):
@@ -33,7 +33,7 @@ def sendfile(conn, add):
 
 
 def handle(conn, add):
-    myhttp = httpParsersecond.http(conn)
+    myhttp = httpParser.http(conn)
     print(myhttp)
     if myhttp.method == '':
         return
