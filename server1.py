@@ -1,7 +1,6 @@
 from socket import *
 import os
 import datetime
-import signal
 import threading
 import time
 import httpParsersecond
