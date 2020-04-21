@@ -1,0 +1,19 @@
+#head {
+    background-color: aquamarine;
+    padding: 10px;
+    width: auto;
+}
+
+.center{
+    text-align: center;
+}
+
+a.headbut {
+    color:rgb(255, 0, 0);
+    padding: 5px;
+    text-align: left;
+}
+.box {
+    border-style: solid;
+    display: inline-block;
+}
