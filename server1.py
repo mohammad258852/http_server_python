@@ -55,7 +55,7 @@ def handle(conn, add):
 
 s = socket(AF_INET, SOCK_STREAM)
 ip = ''
-port = 80
+port = 8080
 s.bind((ip, port))
 s.listen()
 print(f"listening ip {ip} on port {port}")

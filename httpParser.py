@@ -12,73 +12,34 @@ class http():
     def __str__(self):
         return f'{self.method} {self.requestPath} {self.httpVersion} {self.headers} {self.data}'
 
+ENDLINE = b'\r\n'
 
 def getMethod(conn):
-    method = ''
-    while True:
-        data = conn.recv(1)
-        if not data:
-            break
-        if data == b' ':
-            break
-        method += chr(data[0])
-    return method
+    method = readTillGet(conn,b' ')
+    return method.decode("utf-8")
 
 
 def getRequestPath(conn):
-    requestPath = ''
-    while True:
-        data = conn.recv(1)
-        if not data:
-            break
-        if data == b' ':
-            break
-        requestPath += chr(data[0])
+    requestPath = readTillGet(conn,b' ').decode("utf-8")
     return requestPath
 
 
 def getHttpVersion(conn):
-    httpVersion = ''
-    while True:
-        data = conn.recv(1)
-        if not data:
-            break
-        if data == b'\r':
-            conn.recv(1)
-            break
-        httpVersion += chr(data[0])
+    httpVersion = readTillGet(conn,ENDLINE).decode("utf-8")
     return httpVersion
 
 
 def getHeaders(conn):
     headers = {}
     while True:
-        curr_head = ''
-        while True:
-            data = conn.recv(1)
-            if not data:
-                break
-            if data == b'\r':
-                conn.recv(1)
-                return headers
-            tmp = chr(data[0])
-            if tmp == ':':
-                conn.recv(1)
-                break
-            curr_head += tmp
-        curr_value = ''
-        while True:
-            data = conn.recv(1)
-            if not data:
-                break
-            tmp = chr(data[0])
-            if data[0] == 13:
-                conn.recv(1)
-                break
-            curr_value += tmp
-        if not curr_head:
+        header = readTillGet(conn,ENDLINE).decode("utf-8")
+        if not header:
             break
-        headers[curr_head] = curr_value
+        head = header[:header.find(":")]
+        value = header[header.find(":")+2:]
+        if not head:
+            break
+        headers[head] = value
     return headers
 
 
@@ -101,6 +62,9 @@ def readTillGet(conn, reach):
         i = 0
         while i < len(reach):
             tt = conn.recv(1)
+            if not tt:
+                data+=tmp
+                return data
             tmp += tt
             if tt[0] == reach[i]:
                 i += 1
@@ -111,3 +75,4 @@ def readTillGet(conn, reach):
         else:
             data += tmp
     return data
+    
